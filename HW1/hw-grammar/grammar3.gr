@@ -1,0 +1,70 @@
+# The basic grammar rules.  Here's what the abbreviations stand for:
+#    S  = sentence
+#    NP = noun phrase
+#    VP = verb phrase
+#    PP = prepositional phrase
+#    Det = determiner (sometimes called "article")
+#    Prep = preposition
+#    Adj = adjective
+
+1	ROOT	S .
+1	ROOT	S !
+1	ROOT	is it true that S ?
+1	ROOT	it VerbPsych NP that S .
+1	ROOT	that S VerbPsych NP
+
+1	S	NP VP
+1	VP	VerbTran NP
+1	VP	VerbIntran
+1	VP	VerbBridge that S
+1	VP	VP PP
+10	NP	Det Noun
+1	NP	NounProper
+1	NP	NP PP
+1	NP	NP and NP
+1	PP	Prep NP
+10	Noun	Adj Noun
+1	Adj	Adv Adj
+1	VerbTran	VerbTran and VerbTran
+1	VerbInTran	VerbIntran and VerbIntran
+1	VerbIntran	VerbIntran PP
+
+1	VerbTran	ate
+1	VerbTran	wanted
+1	VerbTran	kissed
+1	VerbTran	understood
+1	VerbTran	pickled
+1	VerbIntran	sighed
+1	VerbIntran	worked
+1	VerbPsych	perplexed
+1	VerbPsych	amazed
+1	VerbBridge	thought
+1	VerbBridge	claimed
+
+1	Det	the
+1	Det	a
+1	Det	every
+
+1	Noun	president
+1	Noun	sandwich
+1	Noun	pickle
+1	Noun	chief of staff
+1	Noun	floor
+1	Noun	proposal
+1	Noun	desk
+1	NounProper	Sally
+
+2	Adj	fine
+4	Adj	delicious
+4	Adj	perplexed
+1	Adj	pickled
+
+1	Adv	very
+
+1	Prep	with
+1	Prep	on
+1	Prep	under
+1	Prep	in
+
+
+
