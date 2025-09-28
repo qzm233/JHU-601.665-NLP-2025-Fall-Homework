@@ -58,7 +58,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-# maybe need to modify this one for add prior prob and ratio
 def file_log_prob(file: Path, lm: LanguageModel) -> float:
     """The file contains one sentence per line. Return the total
     log-probability of all these sentences, under the given language model.
@@ -74,7 +73,6 @@ def file_log_prob(file: Path, lm: LanguageModel) -> float:
 
 def main():
     args = parse_args()
-    print(vars(args))
     logging.basicConfig(level=args.logging_level)
 
     # Specify hardware device where all tensors should be computed and stored.  This will give errors unless you have such a device (e.g., 'gpu' will work in a Kaggle Notebook where you have turned on GPU acceleration).
