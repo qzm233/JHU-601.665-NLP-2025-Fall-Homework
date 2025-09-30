@@ -270,6 +270,25 @@ class LanguageModel:
         if self.progress % freq == 1:
             sys.stderr.write(".")
 
+    def sample(self, max_length: int = 20) -> list[Wordtype]:
+        x, y = BOS, BOS
+        sentence: list[Wordtype] = []
+
+        for _ in range(max_length):
+            words = list(self.vocab)
+            probs = torch.tensor([self.prob(x, y, z) for z in words], dtype=torch.float)
+
+            probs = probs / probs.sum()
+            z_idx = torch.multinomial(probs, 1).item()
+            z = words[z_idx]
+
+            if z == EOS:
+                break
+            sentence.append(z)
+            x, y = y, z
+
+        return sentence
+
 
 ##### SPECIFIC FAMILIES OF LANGUAGE MODELS
 
