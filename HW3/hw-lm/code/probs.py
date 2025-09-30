@@ -299,7 +299,6 @@ class UniformLanguageModel(CountBasedLanguageModel):
     def prob(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
         return 1 / self.vocab_size
 
-
 class AddLambdaLanguageModel(CountBasedLanguageModel):
     def __init__(self, vocab: Vocab, lambda_: float) -> None:
         super().__init__(vocab)
@@ -317,17 +316,33 @@ class AddLambdaLanguageModel(CountBasedLanguageModel):
         # over all values of typeZ will give 1, so sum_z p(z | ...) = 1
         # as is required for any probability function.
 
-
 class BackoffAddLambdaLanguageModel(AddLambdaLanguageModel):
     def __init__(self, vocab: Vocab, lambda_: float) -> None:
         super().__init__(vocab, lambda_)
 
     def prob(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
         # TODO: Reimplement me so that I do backoff
-        return super().prob(x, y, z)
+        """Compute smoothed trigram probability with add-λ backoff."""
+        return self._prob_trigram(x, y, z)
         # Don't forget the difference between the Wordtype z and the
         # 1-element tuple (z,). If you're looking up counts,
         # these will have very different counts!
+
+    def _prob_trigram(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
+        num = self.event_count[x, y, z] + self.lambda_ * self.vocab_size * self._prob_bigram(y, z)
+        denom = self.context_count[x, y] + self.lambda_ * self.vocab_size
+        return num / denom if denom > 0 else 1.0 / self.vocab_size
+
+    def _prob_bigram(self, y: Wordtype, z: Wordtype) -> float:
+        num = self.bigram_count[y, z] + self.lambda_ * self.vocab_size * self._prob_unigram(z)
+        denom = self.unigram_count[y] + self.lambda_ * self.vocab_size
+        return num / denom if denom > 0 else 1.0 / self.vocab_size
+
+    def _prob_unigram(self, z: Wordtype) -> float:
+        num = self.unigram_count[z] + self.lambda_
+        denom = self.total_tokens + self.lambda_ * self.vocab_size
+        return num / denom
+
 
 
 class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
