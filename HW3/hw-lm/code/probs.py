@@ -33,6 +33,7 @@ from jaxtyping import Float
 from typeguard import typechecked
 from typing import Counter, Collection
 from collections import Counter
+from tdqm import tdqm
 
 log = logging.getLogger(Path(__file__).stem)  # For usage, see findsim.py in earlier assignment.
 
@@ -374,8 +375,36 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         self.l2: float = l2
 
         # TODO: ADD CODE TO READ THE LEXICON OF WORD VECTORS AND STORE IT IN A USEFUL FORMAT.
-        self.dim: int = 99999999999  # TODO: SET THIS TO THE DIMENSIONALITY OF THE VECTORS
+        # self.dim: int = 99999999999  
+        # # TODO: SET THIS TO THE DIMENSIONALITY OF THE VECTORS
 
+        self.epochs = epochs
+        # lexicon is mapping of each word in vocab to a vector embedding
+        lexicon: dict[str, torch.Tensor] = {}
+        with open(lexicon_file, "r", encoding="utf-8") as f:
+            header = f.readline().strip().split()   # header is like 75 10 (# vocab, embed len)
+            vocab_size = int(header[0])
+            self.dim = int(header[1])
+
+            for line in f:
+                parts = line.strip().split()
+                word = parts[0]
+                vector_values = [float(x) for x in parts[1:]]
+                lexicon[word] = torch.tensor(vector_values, dtype=torch.float32)
+        
+        self.vocab_list_custom = list(self.vocab)
+        self.vocab_size_custom = len(self.vocab_list_custom)
+        self.word2idx_custom = {word: i for i, word in enumerate(self.vocab_list_custom)}
+        self.idx2word_custom = {i: word for i, word in enumerate(self.vocab_list_custom)}
+       
+        self.ool_embedding = lexicon.get(OOL, torch.randn(self.dim)*0.01)   # lexicon contains an OOL embedding
+
+        embedding_matrix = torch.zeros((self.vocab_size_custom, self.dim))  #initialize with 0
+        for word,idx in self.word2idx_custom.items():
+            vec = lexicon.get(word, torch.randn(self.dim) * 0.01)  # embedding vector = torch.randn(self.dim)*0.01 for now
+            embedding_matrix[idx] = vec
+
+        self.embedding = nn.Embedding.from_pretrained(embedding_matrix, freeze=True) # turns into PyTorch module that model can use?
         # We wrap the following matrices in nn.Parameter objects.
         # This lets PyTorch know that these are parameters of the model
         # that should be listed in self.parameters() and will be
@@ -384,8 +413,11 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # We can also store other tensors in the model class,
         # like constant coefficients that shouldn't be altered by
         # training, but those wouldn't use nn.Parameter.
-        self.X = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)
-        self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)
+        self.X = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
+        self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
+
+        self.W_out = nn.Parameter(torch.zeros(self.dim, self.vocab_size_custom), requires_grad=True)   # dimensions (dim x vocab)
+        # 7: params will be stored in X and Y matrices, start off with 0
 
     def log_prob(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
         """Return log p(z | xy) according to this language model."""
@@ -415,7 +447,14 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # The return type, TorchScalar, represents a torch.Tensor scalar.
         # See Question 7 in INSTRUCTIONS.md for more info about fine-grained 
         # type annotations for Tensors.
-        raise NotImplementedError("Implement me!")
+        logits = self.logits(x,y)   # we are finding p(z|x,y)
+        # z_idx = self.vocab[z]
+        z_idx = self.word2idx_custom[z]
+
+        log_num = logits[z_idx]
+        log_denom = torch.logsumexp(logits, dim=0)
+
+        return log_num - log_denom  # log probability is num-denom
 
     def logits(self, x: Wordtype, y: Wordtype) -> Float[torch.Tensor,"vocab"]:
         """Return a vector of the logs of the unnormalized probabilities f(xyz) * θ 
@@ -440,7 +479,33 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # vocabulary, and "embedding" will be replaced by the embedding
         # dimensionality as given by the lexicon.  See
         # https://www.cs.jhu.edu/~jason/465/hw-lm/code/INSTRUCTIONS.html#a-note-on-type-annotations
-        raise NotImplementedError("Implement me!")
+        # x_idx = torch.tensor(self.vocab[x], dtype=torch.long) # get raw word
+        # y_idx = torch.tensor(self.vocab[y], dtype=torch.long) # get raw word
+        if x in self.word2idx_custom:
+            x_idx = torch.tensor(self.word2idx_custom[x], dtype=torch.long)
+            x_vec = self.embedding(x_idx)
+        else:
+            x_vec = self.ool_embedding
+        
+        if y in self.word2idx_custom:
+            y_idx = torch.tensor(self.word2idx_custom[y], dtype=torch.long)
+            y_vec = self.embedding(y_idx)
+        else:
+            y_vec = self.ool_embedding
+
+        context_vec = 0.5 * (x_vec + y_vec)  # shape: (dim,), averaged embeddings
+
+        hidden = context_vec @ self.X
+        hidden = hidden @ self.Y
+
+        logits = hidden @ self.W_out
+        return logits
+    
+    def loss(self, x, y, z):
+        log_p = self.log_prob_tensor(x,y,z)
+        nll = -log_p    # negative log likelihood
+        l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
+        return nll + l2_term
 
     def train(self, file: Path):    # type: ignore
         
@@ -473,26 +538,42 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # we provided, which will iterate over all N trigrams in the training
         # corpus.  (Its use is illustrated in fileprob.py.)
         #
-        # For each successive training example i, compute the stochastic
-        # objective F_i(θ).  This is called the "forward" computation. Don't
-        # forget to include the regularization term. Part of F_i(θ) will be the
-        # log probability of training example i, which the helper method
-        # log_prob_tensor computes.  It is important to use log_prob_tensor
-        # (as opposed to log_prob which returns float) because torch.Tensor
-        # is an object with additional bookkeeping that tracks e.g. the gradient
-        # function for backpropagation as well as accumulated gradient values
-        # from backpropagation.
-        #
-        # To get the gradient of this objective (∇F_i(θ)), call the `backward`
-        # method on the number you computed at the previous step.  This invokes
-        # back-propagation to get the gradient of this number with respect to
-        # the parameters θ.  This should be easier than implementing the
-        # gradient method from the handout.
-        #
-        # Finally, update the parameters in the direction of the gradient, as
-        # shown in Algorithm 1 in the reading handout.  You can do this `+=`
-        # yourself, or you can call the `step` method of the `optimizer` object
-        # we created above.  See the reading handout for more details on this.
+        for epoch in range(self.epochs):
+
+            # print progress throughout training
+            # total_trigrams = num_tokens(file)
+            # trigram_iterator = read_trigrams(file, self.vocab)
+            # progress_bar = tdqm(trigram_iterator,total=total_trigrams,desc=f"Epoch {epoch + 1}/{self.epochs}")
+            
+            # For each successive training example i, 
+            for x,y,z in read_trigrams(file,self.vocab):
+                optimizer.zero_grad()
+
+                # compute the stochastic objective F_i(θ).  This is called the "forward" computation. Don't
+                # forget to include the regularization term. Part of F_i(θ) will be the
+                # log probability of training example i, which the helper method
+                # log_prob_tensor computes.  It is important to use log_prob_tensor
+                # (as opposed to log_prob which returns float) because torch.Tensor
+                # is an object with additional bookkeeping that tracks e.g. the gradient
+                # function for backpropagation as well as accumulated gradient values
+                # from backpropagation.
+                loss_val = self.loss(x,y,z)  # log_prob_tensor used in loss fn above
+
+                # To get the gradient of this objective (∇F_i(θ)), call the `backward`
+                # method on the number you computed at the previous step.  This invokes
+                # back-propagation to get the gradient of this number with respect to
+                # the parameters θ.  This should be easier than implementing the
+                # gradient method from the handout.
+                loss_val.backward()
+
+                # Finally, update the parameters in the direction of the gradient, as
+                # shown in Algorithm 1 in the reading handout.  You can do this `+=`
+                # yourself, or you can call the `step` method of the `optimizer` object
+                # we created above.  See the reading handout for more details on this.
+                optimizer.step()
+
+                # progress_bar.set_postfix(loss=loss_val.item()) # update progress bar
+        
         #
         # For the EmbeddingLogLinearLanguageModel, you should run SGD
         # optimization for the given number of epochs and then stop.  You might 
@@ -535,6 +616,26 @@ class ImprovedLogLinearLanguageModel(EmbeddingLogLinearLanguageModel):
     # described in the reading handout.  This class inherits from
     # EmbeddingLogLinearLanguageModel and you can override anything, such as
     # `log_prob`.
+
+    # Maybe try this? haven't try yet
+    @typechecked
+    def logits(self, x: Wordtype, y: Wordtype) -> Float[torch.Tensor,"vocab"]:
+        # Get the word vectors for the context words x and y
+        x_idx = torch.tensor(self.word2idx_custom[x], dtype=torch.long)
+        y_idx = torch.tensor(self.word2idx_custom[y], dtype=torch.long)
+        x_vec = self.embedding(x_idx)
+        y_vec = self.embedding(y_idx)
+
+            # --- FEATURE IMPROVEMENT ---
+        # Create a weighted average instead of a simple average.
+        # We're hypothesizing that y is more important than x.
+        # The weights (0.7 and 0.3) are hyperparameters you can tune.
+        context_vec = 0.7 * y_vec + 0.3 * x_vec
+        # -------------------------
+        # The rest of the forward pass is the same as the parent class
+        hidden = torch.tanh(context_vec @ self.X)
+        logits = hidden @ self.W_out
+        return logits
 
     # OTHER OPTIONAL IMPROVEMENTS: You could override the `train` method.
     # Instead of using 10 epochs, try "improving the SGD training loop" as
