@@ -33,7 +33,7 @@ from jaxtyping import Float
 from typeguard import typechecked
 from typing import Counter, Collection
 from collections import Counter
-from tdqm import tdqm
+# from tdqm import tdqm
 
 log = logging.getLogger(Path(__file__).stem)  # For usage, see findsim.py in earlier assignment.
 
@@ -379,6 +379,9 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # # TODO: SET THIS TO THE DIMENSIONALITY OF THE VECTORS
 
         self.epochs = epochs
+
+        self.N_train_tokens: int = -1
+
         # lexicon is mapping of each word in vocab to a vector embedding
         lexicon: dict[str, torch.Tensor] = {}
         with open(lexicon_file, "r", encoding="utf-8") as f:
@@ -413,11 +416,14 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # We can also store other tensors in the model class,
         # like constant coefficients that shouldn't be altered by
         # training, but those wouldn't use nn.Parameter.
-        self.X = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
+        self.X = nn.Parameter(torch.empty((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
         self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
 
-        self.W_out = nn.Parameter(torch.zeros(self.dim, self.vocab_size_custom), requires_grad=True)   # dimensions (dim x vocab)
+        self.W_out = nn.Parameter(torch.empty(self.dim, self.vocab_size_custom), requires_grad=True)   # dimensions (dim x vocab)
         # 7: params will be stored in X and Y matrices, start off with 0
+        nn.init.xavier_uniform_(self.X)
+        nn.init.xavier_uniform_(self.Y)
+        nn.init.xavier_uniform_(self.W_out)
 
     def log_prob(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
         """Return log p(z | xy) according to this language model."""
@@ -495,17 +501,22 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
 
         context_vec = 0.5 * (x_vec + y_vec)  # shape: (dim,), averaged embeddings
 
-        hidden = context_vec @ self.X
-        hidden = hidden @ self.Y
+        # hidden = context_vec @ self.X
+        hidden1 = context_vec @ self.X
+        activated1 = torch.tanh(hidden1)
+    
+        hidden2 = activated1 @ self.Y
+        activated2 = torch.tanh(hidden2)
 
-        logits = hidden @ self.W_out
+        # logits = hidden @ self.W_out
+        logits = activated2 @ self.W_out
         return logits
     
     def loss(self, x, y, z):
         log_p = self.log_prob_tensor(x,y,z)
         nll = -log_p    # negative log likelihood
-        l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
-        return nll + l2_term
+        l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.Y.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
+        return nll + (l2_term/self.N_train_tokens)
 
     def train(self, file: Path):    # type: ignore
         
@@ -516,7 +527,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         ### The `type: ignore` comment above tells the type checker to ignore this inconsistency.
         
         # Optimization hyperparameters.
-        eta0 = 0.1  # initial learning rate
+        eta0 = 0.01 # initial learning rate
 
         # This is why we needed the nn.Parameter above.
         # The optimizer needs to know the list of parameters
@@ -524,10 +535,11 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         optimizer = optim.SGD(self.parameters(), lr=eta0)
 
         # Initialize the parameter matrices to be full of zeros.
-        nn.init.zeros_(self.X)   # type: ignore
-        nn.init.zeros_(self.Y)   # type: ignore
+        # nn.init.zeros_(self.X)   # type: ignore
+        # nn.init.zeros_(self.Y)   # type: ignore
 
         N = num_tokens(file)
+        self.N_train_tokens = N
         log.info("Start optimizing on {N} training tokens...")
 
         #####################
@@ -538,13 +550,11 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # we provided, which will iterate over all N trigrams in the training
         # corpus.  (Its use is illustrated in fileprob.py.)
         #
-        for epoch in range(self.epochs):
+        for epoch in range(1, self.epochs+1):
 
-            # print progress throughout training
-            # total_trigrams = num_tokens(file)
-            # trigram_iterator = read_trigrams(file, self.vocab)
-            # progress_bar = tdqm(trigram_iterator,total=total_trigrams,desc=f"Epoch {epoch + 1}/{self.epochs}")
-            
+            total_loss = 0.0
+            trigram_count = 0
+
             # For each successive training example i, 
             for x,y,z in read_trigrams(file,self.vocab):
                 optimizer.zero_grad()
@@ -572,9 +582,15 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
                 # we created above.  See the reading handout for more details on this.
                 optimizer.step()
 
+                total_loss += loss_val.item()
+                trigram_count += 1
+            
+
                 # progress_bar.set_postfix(loss=loss_val.item()) # update progress bar
+            F = -(total_loss / trigram_count)
+            print(f"epoch {epoch}: F = {F:.10f}")   # format like in example
         
-        #
+        print(f"Finished training on {N} tokens")
         # For the EmbeddingLogLinearLanguageModel, you should run SGD
         # optimization for the given number of epochs and then stop.  You might 
         # want to print progress dots using the `show_progress` method defined above.  
