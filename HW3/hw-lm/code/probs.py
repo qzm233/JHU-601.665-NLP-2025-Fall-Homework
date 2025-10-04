@@ -415,12 +415,12 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # like constant coefficients that shouldn't be altered by
         # training, but those wouldn't use nn.Parameter.
         self.X = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
-        self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
+        # self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
 
         self.W_out = nn.Parameter(torch.empty(self.dim, self.vocab_size_custom), requires_grad=True)   # dimensions (dim x vocab)
         # 7: params will be stored in X and Y matrices, start off with 0
         nn.init.xavier_uniform_(self.X)
-        nn.init.xavier_uniform_(self.Y)
+        # nn.init.xavier_uniform_(self.Y)
         nn.init.xavier_uniform_(self.W_out)
 
     def log_prob(self, x: Wordtype, y: Wordtype, z: Wordtype) -> float:
@@ -497,21 +497,16 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
             y_vec = self.ool_embedding
 
         context_vec = 0.5 * (x_vec + y_vec)  # shape: (dim,), averaged embeddings
-
-        hidden1 = context_vec @ self.X
-        activated1 = torch.tanh(hidden1)
-    
-        hidden2 = activated1 @ self.Y
-        activated2 = torch.tanh(hidden2)
-
-        logits = activated2 @ self.W_out
+        hidden = torch.tanh(context_vec @ self.X)
+        logits = hidden @ self.W_out
         return logits
     
     def loss(self, x, y, z):
         log_p = self.log_prob_tensor(x,y,z)
         nll = -log_p    # negative log likelihood
-        l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.Y.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
+        l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
         return nll + (l2_term/self.N_train_tokens)
+        # return nll + l2_term
 
     def train(self, file: Path):    # type: ignore
         
