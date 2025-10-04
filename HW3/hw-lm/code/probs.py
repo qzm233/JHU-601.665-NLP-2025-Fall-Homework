@@ -379,9 +379,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # # TODO: SET THIS TO THE DIMENSIONALITY OF THE VECTORS
 
         self.epochs = epochs
-
         self.N_train_tokens: int = -1
-
         # lexicon is mapping of each word in vocab to a vector embedding
         lexicon: dict[str, torch.Tensor] = {}
         with open(lexicon_file, "r", encoding="utf-8") as f:
@@ -416,7 +414,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # We can also store other tensors in the model class,
         # like constant coefficients that shouldn't be altered by
         # training, but those wouldn't use nn.Parameter.
-        self.X = nn.Parameter(torch.empty((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
+        self.X = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
         self.Y = nn.Parameter(torch.zeros((self.dim, self.dim)), requires_grad=True)    # dimensions (dim x dim)
 
         self.W_out = nn.Parameter(torch.empty(self.dim, self.vocab_size_custom), requires_grad=True)   # dimensions (dim x vocab)
@@ -454,7 +452,6 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         # See Question 7 in INSTRUCTIONS.md for more info about fine-grained 
         # type annotations for Tensors.
         logits = self.logits(x,y)   # we are finding p(z|x,y)
-        # z_idx = self.vocab[z]
         z_idx = self.word2idx_custom[z]
 
         log_num = logits[z_idx]
@@ -501,14 +498,12 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
 
         context_vec = 0.5 * (x_vec + y_vec)  # shape: (dim,), averaged embeddings
 
-        # hidden = context_vec @ self.X
         hidden1 = context_vec @ self.X
         activated1 = torch.tanh(hidden1)
     
         hidden2 = activated1 @ self.Y
         activated2 = torch.tanh(hidden2)
 
-        # logits = hidden @ self.W_out
         logits = activated2 @ self.W_out
         return logits
     
@@ -516,7 +511,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         log_p = self.log_prob_tensor(x,y,z)
         nll = -log_p    # negative log likelihood
         l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.Y.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
-        return nll + (l2_term/self.N_train_tokens)
+        return nll + (l2_term / self.N_train_tokens)
 
     def train(self, file: Path):    # type: ignore
         
@@ -580,11 +575,11 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
                 # shown in Algorithm 1 in the reading handout.  You can do this `+=`
                 # yourself, or you can call the `step` method of the `optimizer` object
                 # we created above.  See the reading handout for more details on this.
-                optimizer.step()
 
                 total_loss += loss_val.item()
                 trigram_count += 1
             
+                optimizer.step()
 
                 # progress_bar.set_postfix(loss=loss_val.item()) # update progress bar
             F = -(total_loss / trigram_count)
