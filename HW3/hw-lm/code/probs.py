@@ -402,7 +402,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
 
         embedding_matrix = torch.zeros((self.vocab_size_custom, self.dim))  #initialize with 0
         for word,idx in self.word2idx_custom.items():
-            vec = lexicon.get(word, torch.randn(self.dim) * 0.01)  # embedding vector = torch.randn(self.dim)*0.01 for now
+            vec = lexicon.get(word, self.ool_embedding)  # embedding vector = torch.randn(self.dim)*0.01 for now
             embedding_matrix[idx] = vec
 
         self.embedding = nn.Embedding.from_pretrained(embedding_matrix, freeze=True) # turns into PyTorch module that model can use?
@@ -511,7 +511,7 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
         log_p = self.log_prob_tensor(x,y,z)
         nll = -log_p    # negative log likelihood
         l2_term = 0.5 * self.l2 * (self.X.pow(2).sum() + self.Y.pow(2).sum() + self.W_out.pow(2).sum())  # use regularizer
-        return nll + (l2_term / self.N_train_tokens)
+        return nll + (l2_term/self.N_train_tokens)
 
     def train(self, file: Path):    # type: ignore
         
@@ -576,11 +576,11 @@ class EmbeddingLogLinearLanguageModel(LanguageModel, nn.Module):
                 # yourself, or you can call the `step` method of the `optimizer` object
                 # we created above.  See the reading handout for more details on this.
 
+                optimizer.step()
+
                 total_loss += loss_val.item()
                 trigram_count += 1
             
-                optimizer.step()
-
                 # progress_bar.set_postfix(loss=loss_val.item()) # update progress bar
             F = -(total_loss / trigram_count)
             print(f"epoch {epoch}: F = {F:.10f}")   # format like in example
