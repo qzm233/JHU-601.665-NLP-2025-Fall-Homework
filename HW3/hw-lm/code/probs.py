@@ -644,7 +644,6 @@ class ImprovedLogLinearLanguageModel(EmbeddingLogLinearLanguageModel):
         return score
 
     @typechecked
-    @typechecked
     def logits(self, x: Wordtype, y: Wordtype):
         """Vectorized logits computation with repetition, skip-bigram, and spelling features."""
         device = next(self.parameters()).device
