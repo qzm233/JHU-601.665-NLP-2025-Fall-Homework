@@ -72,7 +72,7 @@ class HiddenMarkovModel:
 
         self.tagset = tagset
         self.vocab = vocab
-
+ 
         # Useful constants that are referenced by the methods
         self.bos_t: Optional[int] = tagset.index(BOS_TAG)
         self.eos_t: Optional[int] = tagset.index(EOS_TAG)

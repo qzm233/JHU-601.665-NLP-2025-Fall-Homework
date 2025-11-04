@@ -58,7 +58,7 @@ class Sentence(List[TWord]):
         [sentence.append(
             (word, tag if tag == BOS_TAG or tag == EOS_TAG else None)) for word, tag in self]
         return sentence
-
+ 
     def is_supervised(self) -> bool:
         """Is the given sentence fully supervised?"""
         return all(tag is not None for _, tag in self)

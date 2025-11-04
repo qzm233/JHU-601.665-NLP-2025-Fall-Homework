@@ -64,9 +64,18 @@ class ConditionalRandomField(HiddenMarkovModel):
         # 
         # For a unigram model, self.WA should just have a single row:
         # that model has fewer parameters.
+        k, V = self.k, self.V
+        rows = 1 if self.unigram else k
 
-        raise NotImplementedError   # you fill this in!
-        self.updateAB()   # compute potential matrices
+        self.WB = 0.01 * torch.randn(k, V)
+        self.WA = 0.01 * torch.randn(rows, k)
+
+        self.WB[self.bos_t, :] = float('-inf')
+        self.WB[self.eos_t, :] = float('-inf')
+        self.WA[:, self.bos_t] = float('-inf')        
+        if not self.unigram:
+            self.WA[self.eos_t, :] = float('-inf')   
+        self.updateAB()  
 
     def updateAB(self) -> None:
         """Set the transition and emission matrices self.A and self.B, 
@@ -77,8 +86,22 @@ class ConditionalRandomField(HiddenMarkovModel):
         # you should make a full k × k matrix A of transition potentials,
         # so that the forward-backward code will still work.
         # See init_params() in the parent class for discussion of this point.
-        
-        raise NotImplementedError   # you fill this in!
+
+        # initializing A and B from WA and WB
+        '''
+        self.A = torch.exp(torch.clamp(self.WA, min=-50, max=50))
+        self.B = torch.exp(torch.clamp(self.WB, min=-50, max=50))
+        '''
+        self.A = torch.exp(self.WA)
+        self.B = torch.exp(self.WB)
+
+        if self.unigram:
+            self.A = self.A.repeat(self.k, 1)  
+
+        self.B[self.bos_t, :] = 0.0
+        self.B[self.eos_t, :] = 0.0
+        self.A[:, self.bos_t] = 0.0
+        self.A[self.eos_t, :] = 0.0
 
     @override
     def train(self,
@@ -202,7 +225,9 @@ class ConditionalRandomField(HiddenMarkovModel):
         # in order to compute the normalizing constant for this sentence.
         desup_isent = self._integerize_sentence(sentence.desupervise(), corpus)
 
-        raise NotImplementedError   # you fill this in!
+        logZ_sup = self.forward_pass(isent)        # log sum paths consistent with given tags(possible)
+        logZ_all = self.forward_pass(desup_isent)  # log sum all paths (normalizer)
+        return logZ_sup - logZ_all
 
     def accumulate_logprob_gradient(self, sentence: Sentence, corpus: TaggedCorpus) -> None:
         """Add the gradient of self.logprob(sentence, corpus) into a total minibatch
@@ -221,7 +246,8 @@ class ConditionalRandomField(HiddenMarkovModel):
         isent_desup = self._integerize_sentence(sentence.desupervise(), corpus)
 
         # Hint: use the mult argument to E_step().
-        raise NotImplementedError   # you fill this in!
+        self.E_step(isent_sup,   mult=+1.0)
+        self.E_step(isent_desup, mult=-1.0)
         
     def _zero_grad(self):
         """Reset the gradient accumulator to zero."""
@@ -236,8 +262,29 @@ class ConditionalRandomField(HiddenMarkovModel):
         # Warning: Careful about how to handle the unigram case, where self.WA
         # is only a vector of tag unigram potentials (even though self.A_counts
         # is a still a matrix of tag bigram potentials).
-        
-        raise NotImplementedError   # you fill this in!
+
+        grad_WB = self.B_counts.clone() # B_count equals to the expected counts of emissions
+        grad_WB[self.bos_t, :] = 0.0
+        grad_WB[self.eos_t, :] = 0.0
+
+        finite_mask_WB = torch.isfinite(self.WB) # mask to avoid updating inf/nan values
+        self.WB[finite_mask_WB] += lr * grad_WB[finite_mask_WB]
+
+        # find the gradient for WA, careful about unigram case
+        if not self.unigram:
+            grad_WA = self.A_counts.clone()
+            grad_WA[self.eos_t, :] = 0.0
+            grad_WA[:, self.bos_t] = 0.0 
+            finite_mask_WA = torch.isfinite(self.WA)
+            self.WA[finite_mask_WA] += lr * grad_WA[finite_mask_WA]
+        else:
+            grad_uniform = self.A_counts.sum(dim=0)  # [k]
+            grad_uniform[self.bos_t] = 0.0
+            finite_mask_WA = torch.isfinite(self.WA) 
+            self.WA[finite_mask_WA] += lr * grad_uniform[finite_mask_WA]
+
+        self.updateAB()
+
         
     def reg_gradient_step(self, lr: float, reg: float, frac: float):
         """Update the parameters using the gradient of our regularizer.
@@ -251,7 +298,11 @@ class ConditionalRandomField(HiddenMarkovModel):
         # because some of the weights are infinite and inf - inf = nan. 
         # Instead, you want something like w *= 0.9 or equivalently w.mul_(0.9).
 
-        raise NotImplementedError   # you fill this in!
+        coefficient = lr * reg * frac 
+        mask_WB = torch.isfinite(self.WB)
+        self.WB[mask_WB] -= coefficient * self.WB[mask_WB]
+        mask_WA = torch.isfinite(self.WA)
+        self.WA[mask_WA] -= coefficient * self.WA[mask_WA]
     
         # Note: Our train() implementation chooses to call this method *after*
         # each minibatch update, which results in subtracting a multiple of the
