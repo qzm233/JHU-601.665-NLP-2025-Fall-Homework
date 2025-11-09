@@ -348,15 +348,17 @@ class HiddenMarkovModel:
 
             if j == n - 1:
                 emit = torch.zeros(self.k)                        # EOS: no emission (log 1 = 0)
-                mask = torch.full((self.k,), float('-inf')); mask[self.eos_t] = 0.0
+                mask = torch.full((self.k,), float('-inf')) #[k,]
+                mask[self.eos_t] = 0.0
             else:
                 w_j = isent[j][0]
                 emit = lB[:, w_j]
                 if isent[j][1] is not None:
                     t_j = isent[j][1]
-                    mask = torch.full((self.k,), float('-inf')); mask[t_j] = 0.0
+                    mask = torch.full((self.k,), float('-inf'))
+                    mask[t_j] = 0.0
                 else:
-                    mask = torch.zeros(self.k)
+                    mask = torch.zeros(self.k) # [k]
 
             log_alpha[j] = trans + emit + mask  # [k]
 
@@ -420,17 +422,18 @@ class HiddenMarkovModel:
                 emit = lB[:, w_j]
                 if isent[j][1] is not None:
                     t_j = isent[j][1]
-                    mask = torch.full((self.k,), float('-inf')); mask[t_j] = 0.0
+                    mask = torch.full((self.k,), float('-inf'))
+                    mask[t_j] = 0.0
                 else:
                     mask = torch.zeros(self.k)
 
             M = (
-                self._log_alpha[j-1].view(-1,1)   # [k,1]
-                + lA                               # [k,k]
+                self._log_alpha[j-1].view(-1,1)   # [k,1] 
+                + lA                               # [k,k] 
                 + emit.view(1,-1)                  # [1,k]
                 + mask.view(1,-1)                  # [1,k]
                 + log_beta[j].view(1,-1)           # [1,k]
-                - log_Z
+                - log_Z # [1]
             ) # normalized log probability
             Xi = torch.exp(M) * mult               # [k,k]
             self.A_counts += Xi 
