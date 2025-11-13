@@ -260,7 +260,7 @@ class HiddenMarkovModel:
             dev_loss = loss(self)   # this will print its own log messages
             if dev_loss >= old_dev_loss * (1-tolerance):
                 # we haven't gotten much better, so perform early stopping
-                break
+                 break
             old_dev_loss = dev_loss            # remember for next eval batch
         
         # Save the trained model.
@@ -442,7 +442,10 @@ class HiddenMarkovModel:
                 gamma = torch.exp(self._log_alpha[j] + log_beta[j] - log_Z) * mult  # [k]
                 w_j = isent[j][0]
                 self.B_counts[:, w_j] += gamma
-
+        self.B_counts[self.eos_t, :].zero_()  # make sure no counts from EOS and BOS
+        self.B_counts[self.bos_t, :].zero_()  # make sure no counts from BOS and EOS
+        self.A_counts[:, self.bos_t].zero_()  # make sure no counts to BOS
+        self.A_counts[self.eos_t, :].zero_()  # make sure no counts from EOS
         log_Z_backward = torch.logsumexp(torch.log(self.eye[self.bos_t]) + log_beta[0], dim=0)
         return log_Z_backward
     def viterbi_tagging(self, sentence: Sentence, corpus: TaggedCorpus) -> Sentence:

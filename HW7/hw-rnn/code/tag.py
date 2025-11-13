@@ -300,7 +300,7 @@ def main() -> None:
     # Load or create the model, and load the training corpus.
     train_paths = [Path(t) for t in args.train] if args.train else []
     new_model_class = args.new_model_class
-    known_vocab = TaggedCorpus(Path("../data/ensup")).vocab  # we may need this
+    known_vocab = None   # we may need this
     if args.load_path:
         # load an existing model and use its vocab/tagset/lexicon
         model = HiddenMarkovModel.load(args.load_path, device=args.device)  # HMM is ancestor of all classes
@@ -312,7 +312,7 @@ def main() -> None:
     else:
         # Build a new model of the required class from scratch, building vocab/tagset from training corpus.
         assert new_model_class is not None
-        train_corpus = TaggedCorpus(*train_paths, tagset=TaggedCorpus(Path("../data/ensup")).tagset)
+        train_corpus = TaggedCorpus(*train_paths)
         if not getattr(new_model_class, 'neural', False):
             # simple non-neural model
             model = new_model_class(train_corpus.tagset, train_corpus.vocab, 
