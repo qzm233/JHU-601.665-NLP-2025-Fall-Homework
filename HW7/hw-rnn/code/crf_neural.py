@@ -225,11 +225,15 @@ class ConditionalRandomFieldNeural(ConditionalRandomFieldBackprop):
         scores = H @ self.theta_a                  # [k*k]
         scores = scores.view(k, k)                 # [k, k]
 
-        A = torch.exp(scores)                      # ϕA(s,t,w,position)
+        # 先算出未约束的势
+        A = torch.exp(scores)                      # [k, k]
 
-        # 结构 0：不能转到 BOS，不能从 EOS 转出
-        A[:, self.bos_t] = 0.0
-        A[self.eos_t, :] = 0.0
+        # 用 mask 实现结构 0，而不是 inplace 改 A 本身
+        maskA = torch.ones_like(A)
+        maskA[:, self.bos_t] = 0.0   # 不能转到 BOS
+        maskA[self.eos_t, :] = 0.0   # 不能从 EOS 转出
+
+        A = A * maskA                # 新张量，非 inplace
 
         return A
 
@@ -288,13 +292,14 @@ class ConditionalRandomFieldNeural(ConditionalRandomFieldBackprop):
         scores = H @ self.theta_b                      # [k]
         col = torch.exp(scores)                        # [k]
 
-        # 结构 0：BOS/EOS tag 不发射普通词
-        col = col.clone()
-        col[self.bos_t] = 0.0
-        col[self.eos_t] = 0.0
+        # 用 mask 实现结构 0，避免对 col inplace
+        mask = torch.ones_like(col)
+        mask[self.bos_t] = 0.0
+        mask[self.eos_t] = 0.0
+        col = col * mask
 
         # 把当前词这一列设成 φB(t, w_j, w, position)
-        B[:, w_idx] = col
+        B[:, w_idx] = col   # 注意：B 是 torch.ones(...) 创建的，不带 grad，这个 inplace 没问题
 
         return B
 

@@ -15,6 +15,7 @@ from hmm import HiddenMarkovModel
 from crf import ConditionalRandomField
 # from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
 # from crf_test import ConditionalRandomFieldTest as ConditionalRandomField
+# from crf_neural import ConditionalRandomFieldNeural as ConditionalRandomField
 
 log = logging.getLogger(Path(__file__).stem)  # For usage, see findsim.py in earlier assignment.
 
@@ -336,6 +337,7 @@ def main() -> None:
                 if args.problex:
                     lexicon = build_lexicon(train_corpus, problex=args.problex)
                 else:
+                    print("got you!!!")
                     # Simple one-hot embeddings are our final fallback if nothing else was specified.
                     lexicon = build_lexicon(train_corpus, one_hot=True)
 
@@ -404,6 +406,6 @@ def main() -> None:
         loss(model)         # show the main loss function (using the logger) -- redundant if we trained
         other_loss(model)   # show the other loss function (using the logger)
         eval_log.info("===")
-    
+
 if __name__ == "__main__":
     main()

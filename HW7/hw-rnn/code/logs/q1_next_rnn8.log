@@ -1,32 +1,77 @@
+Warning: model/next-rnn8.pkl already exists; will be overwritten at end of training
+Warning: won't load model/next-rnn8.pkl: use --checkpoint for that
 INFO:corpus:Read 982 tokens from nextsup
 INFO:corpus:Created 7 tag types
 INFO:corpus:Created 7 word types
 INFO:crf_backprop:Parameters: 768 = 8*16 + 8*16 + 8*31 + 8 + 8*31 + 8
 INFO:crf_backprop:Parameters: 768 = 8*16 + 8*16 + 8*31 + 8 + 8*31 + 8
-<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x13bf06c40>> <integerize.Integerizer object at 0x13bf06490> 
-<integerize.Integerizer object at 0x13bf06490> <integerize.Integerizer object at 0x13bf066d0>
-  0%|          | 0/20 [00:00<?, ?it/s]100%|██████████| 20/20 [00:00<00:00, 191.30it/s]100%|██████████| 20/20 [00:00<00:00, 190.96it/s]
-INFO:eval:Cross-entropy: 1.4740 nats (= perplexity 4.367)
-  0%|          | 0/200 [00:00<?, ?it/s]  8%|▊         | 15/200 [00:00<00:01, 146.20it/s] 14%|█▍        | 29/200 [00:00<00:01, 125.27it/s]
-Traceback (most recent call last):
-  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/tag.py", line 409, in <module>
-    main()
-  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/tag.py", line 366, in main
-    model.train(corpus=train_corpus,
-  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf_backprop.py", line 139, in train
-    super().train(corpus, *args, minibatch_size=minibatch_size, lr=lr, reg=reg, **kwargs)
-  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf.py", line 196, in train
-    self.logprob_gradient_step(lr)
-  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf_backprop.py", line 179, in logprob_gradient_step
-    self._minibatch_loss.backward()
-  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/_tensor.py", line 478, in backward
-    return handle_torch_function(
-  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/overrides.py", line 1534, in handle_torch_function
-    result = mode.__torch_function__(public_api, types, args, kwargs)
-  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/utils/_device.py", line 62, in __torch_function__
-    return func(*args, **kwargs)
-  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/_tensor.py", line 487, in backward
-    torch.autograd.backward(
-  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/autograd/__init__.py", line 200, in backward
-    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation: [torch.FloatTensor [7, 7]], which is output 0 of ExpBackward0, is at version 2; expected version 0 instead. Hint: enable anomaly detection to find the operation that failed to compute its gradient, with torch.autograd.set_detect_anomaly(True).
+INFO:eval:Tagging accuracy: all: 25.114%, known: 25.114%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.12 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 23.288%, known: 23.288%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.15 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 37.443%, known: 37.443%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.34 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 46.119%, known: 46.119%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 67.580%, known: 67.580%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.5 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 91.781%, known: 91.781%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 3.4 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.3 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.72 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.11 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.024 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.007 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0031 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0018 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0012 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00091 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00076 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00059 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00053 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00045 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00038 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00034 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00029 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00027 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00023 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0002 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0002 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00016 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00015 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00013 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00012 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:hmm:Saved model to model/next-rnn8.pkl
+INFO:eval:Total training time: 0:00:58
+---
+INFO:eval:Wrote tagging to model/next-rnn8_nextdev.output
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:eval:Cross-entropy: 0.0010 nats (= perplexity 1.001)
+INFO:eval:===
+<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x12259b220>> <integerize.Integerizer object at 0x12259bac0> 
+<integerize.Integerizer object at 0x12259bac0> <integerize.Integerizer object at 0x12259bdc0>

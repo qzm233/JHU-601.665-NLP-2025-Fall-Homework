@@ -187,7 +187,6 @@ class ConditionalRandomFieldBackprop(ConditionalRandomField, nn.Module):
         # regularization for us.        
         return # zimo's comment: so do noting here
 
-
     def learning_speed(self, lr: float, minibatch_size: int) -> float:
         """Estimates how fast we are trying to learn, based on the gradient
         of the most recent minibatch.  Call this just before or after an

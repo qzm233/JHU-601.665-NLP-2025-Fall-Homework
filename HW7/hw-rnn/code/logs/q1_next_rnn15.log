@@ -1,0 +1,77 @@
+Warning: model/next-rnn8.pkl already exists; will be overwritten at end of training
+Warning: won't load model/next-rnn8.pkl: use --checkpoint for that
+INFO:corpus:Read 982 tokens from nextsup
+INFO:corpus:Created 7 tag types
+INFO:corpus:Created 7 word types
+INFO:crf_backprop:Parameters: 2070 = 15*23 + 15*23 + 15*45 + 15 + 15*45 + 15
+INFO:crf_backprop:Parameters: 2070 = 15*23 + 15*23 + 15*45 + 15 + 15*45 + 15
+INFO:eval:Tagging accuracy: all: 21.461%, known: 21.461%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.13 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 23.288%, known: 23.288%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.19 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 33.790%, known: 33.790%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.55 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 63.927%, known: 63.927%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.9 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 78.995%, known: 78.995%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 3.4 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 97.260%, known: 97.260%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.28 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.022 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0031 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00086 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00029 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.00016 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 0.0001 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 7e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 6e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 5.2e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 4e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 3.7e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 3.5e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.9e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.7e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.5e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.2e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 2.1e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.8e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.8e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.7e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.5e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.3e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:crf:Average learning speed: 1.3e-05 (estimated training loss reduction per example)
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:hmm:Saved model to model/next-rnn8.pkl
+INFO:eval:Total training time: 0:01:04
+---
+INFO:eval:Wrote tagging to model/next-rnn8_nextdev.output
+INFO:eval:Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+INFO:eval:Cross-entropy: 0.0003 nats (= perplexity 1.000)
+INFO:eval:===
+<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x12fec5c10>> <integerize.Integerizer object at 0x12fec5df0> 
+<integerize.Integerizer object at 0x12fec5df0> <integerize.Integerizer object at 0x12fec5f70>

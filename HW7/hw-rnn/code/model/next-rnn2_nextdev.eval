@@ -1,1 +1,75 @@
 Cross-entropy: 1.4757 nats (= perplexity 4.374)
+Tagging accuracy: all: 9.132%, known: 9.132%, seen: nan%, novel: nan%
+Tagging accuracy: all: 21.005%, known: 21.005%, seen: nan%, novel: nan%
+Tagging accuracy: all: 21.005%, known: 21.005%, seen: nan%, novel: nan%
+Tagging accuracy: all: 23.288%, known: 23.288%, seen: nan%, novel: nan%
+Tagging accuracy: all: 30.137%, known: 30.137%, seen: nan%, novel: nan%
+Tagging accuracy: all: 40.183%, known: 40.183%, seen: nan%, novel: nan%
+Tagging accuracy: all: 40.639%, known: 40.639%, seen: nan%, novel: nan%
+Tagging accuracy: all: 44.292%, known: 44.292%, seen: nan%, novel: nan%
+Tagging accuracy: all: 58.904%, known: 58.904%, seen: nan%, novel: nan%
+Tagging accuracy: all: 72.603%, known: 72.603%, seen: nan%, novel: nan%
+Tagging accuracy: all: 75.342%, known: 75.342%, seen: nan%, novel: nan%
+Tagging accuracy: all: 89.041%, known: 89.041%, seen: nan%, novel: nan%
+Tagging accuracy: all: 96.804%, known: 96.804%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Total training time: 0:00:57
+---
+Wrote tagging to model/next-rnn2_nextdev.output
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Cross-entropy: 0.0176 nats (= perplexity 1.018)
+===
+Tagging accuracy: all: 9.132%, known: 9.132%, seen: nan%, novel: nan%
+Tagging accuracy: all: 21.005%, known: 21.005%, seen: nan%, novel: nan%
+Tagging accuracy: all: 21.005%, known: 21.005%, seen: nan%, novel: nan%
+Tagging accuracy: all: 23.288%, known: 23.288%, seen: nan%, novel: nan%
+Tagging accuracy: all: 30.137%, known: 30.137%, seen: nan%, novel: nan%
+Tagging accuracy: all: 40.183%, known: 40.183%, seen: nan%, novel: nan%
+Tagging accuracy: all: 40.639%, known: 40.639%, seen: nan%, novel: nan%
+Tagging accuracy: all: 44.292%, known: 44.292%, seen: nan%, novel: nan%
+Tagging accuracy: all: 58.904%, known: 58.904%, seen: nan%, novel: nan%
+Tagging accuracy: all: 72.603%, known: 72.603%, seen: nan%, novel: nan%
+Tagging accuracy: all: 75.342%, known: 75.342%, seen: nan%, novel: nan%
+Tagging accuracy: all: 89.041%, known: 89.041%, seen: nan%, novel: nan%
+Tagging accuracy: all: 96.804%, known: 96.804%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Total training time: 0:00:57
+---
+Wrote tagging to model/next-rnn2_nextdev.output
+Tagging accuracy: all: 100.000%, known: 100.000%, seen: nan%, novel: nan%
+Cross-entropy: 0.0176 nats (= perplexity 1.018)
+===
