@@ -1,0 +1,4 @@
+Wrote tagging to model/en-crf-basic_ensup.output
+Cross-entropy: 0.3982 nats (= perplexity 1.489)
+Tagging accuracy: all: 86.840%, known: 86.840%, seen: nan%, novel: nan%
+===

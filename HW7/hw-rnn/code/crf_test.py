@@ -36,8 +36,8 @@ class ConditionalRandomFieldTest(ConditionalRandomFieldBackprop):
     def __init__(self, 
                  tagset: Integerizer[Tag],
                  vocab: Integerizer[Word],
-                 lexicon: Tensor,
-                 rnn_dim: int,
+                #  lexicon: Tensor,
+                #  rnn_dim: int,
                  unigram: bool = False):
         """Construct an CRF with initially random parameters, with the
         given tagset, vocabulary, and lexical features.  See the super()
@@ -46,17 +46,20 @@ class ConditionalRandomFieldTest(ConditionalRandomFieldBackprop):
         # an __init__() call to the nn.Module class must be made before assignment on the child.
         nn.Module.__init__(self)  
 
-        self.E = lexicon          # rows are word embeddings
-        self.e = lexicon.size(1)  # dimensionality of word embeddings
-        self.rnn_dim = rnn_dim
+        # self.E = lexicon          # rows are word embeddings
+        # self.e = lexicon.size(1)  # dimensionality of word embeddings
+        # self.rnn_dim = rnn_dim
 
         super().__init__(tagset, vocab, unigram)
 
     @override
     def init_params(self) -> None:
-        # [docstring will be inherited from parent method]
+        # for possup/posdev
+        self.period = 4
+        self.W_pos = nn.Parameter(0.01 * torch.randn(self.period, self.k))
 
-        raise NotImplementedError   # you fill this in!
+        # for nextsup/nextdev
+        self.W_next = nn.Parameter(0.01 * torch.randn(self.V, self.k))
 
     @override
     def updateAB(self) -> None:
@@ -77,16 +80,54 @@ class ConditionalRandomFieldTest(ConditionalRandomFieldBackprop):
 
         # You need to override this function to compute your non-stationary features.
 
-        raise NotImplementedError   # you fill this in!
+        non_stationary_A = self.W_pos.new_ones(self.k, self.k)   # [k, k], using the same dtype and devices
 
+        non_stationary_A[:, self.bos_t] = 0.0
+        non_stationary_A[self.eos_t, :] = 0.0
         return non_stationary_A   # example
-        
-        
+
+        # [docstring will be inherited from parent method]
+        n = len(sentence)
+
+        B = self.W_pos.new_ones(self.k, self.V)   # [k, V]
+
+        if position == 0 or position == n - 1:
+            return B
+        curr_w = sentence[position][0]
+        next_w = sentence[position + 1][0]
+        idx = position % self.period
+        print(position, n, idx, self.W_pos.shape, self.W_next.shape, curr_w, next_w)
+        log_phi = self.W_pos[idx] + self.W_next[next_w]    # shape [k]
+
+        log_phi = log_phi.clone()
+        log_phi[self.bos_t] = -inf
+        log_phi[self.eos_t] = -inf
+
+        B[:, curr_w] = torch.exp(log_phi)  
+        return B
     @override
     @typechecked
     def B_at(self, position, sentence) -> Tensor:
-        # [docstring will be inherited from parent method]
+        n = len(sentence)
 
-        raise NotImplementedError   # you fill this in!
+        B = self.W_pos.new_ones(self.k, self.V)   # [k, V]
 
-        return non_stationary_B    # example
+        if position == 0 or position == n - 1:
+            return B
+
+        curr_w = sentence[position][0]
+
+        idx = position % self.period
+        log_phi = self.W_pos[idx].clone()    # [k]
+
+        if position + 1 < n:
+            next_w = sentence[position + 1][0]
+            if 0 <= next_w < self.V:
+                log_phi = log_phi + self.W_next[next_w]
+
+        log_phi[self.bos_t] = -inf
+        log_phi[self.eos_t] = -inf
+
+        B[:, curr_w] = torch.exp(log_phi)   
+
+        return B

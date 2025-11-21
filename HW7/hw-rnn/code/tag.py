@@ -13,6 +13,8 @@ from corpus import TaggedCorpus
 from eval import model_cross_entropy, viterbi_error_rate, write_tagging, log as eval_log
 from hmm import HiddenMarkovModel
 from crf import ConditionalRandomField
+# from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
+# from crf_test import ConditionalRandomFieldTest as ConditionalRandomField
 
 log = logging.getLogger(Path(__file__).stem)  # For usage, see findsim.py in earlier assignment.
 
@@ -86,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     traingroup.add_argument(
         "--max_steps",
         type=int,
-        default=50000,
+        default=6000,
         help="maximum number of training steps (measured in sentences, not epochs or minibatches)"
     )
 
@@ -313,6 +315,7 @@ def main() -> None:
         # Build a new model of the required class from scratch, building vocab/tagset from training corpus.
         assert new_model_class is not None
         train_corpus = TaggedCorpus(*train_paths)
+        print(f"{train_corpus.num_tokens} {train_corpus.tagset} ")
         if not getattr(new_model_class, 'neural', False):
             # simple non-neural model
             model = new_model_class(train_corpus.tagset, train_corpus.vocab, 
@@ -370,6 +373,7 @@ def main() -> None:
                         max_steps=args.max_steps,
                         save_path=args.model)
         elif isinstance(model, HiddenMarkovModel): 
+            print("???????????????")
             for option in 'reg', 'lr', 'batch_size', 'eval_interval':
                 if getattr(args, option):
                     log.warning(f"Ignoring --{option} since we're training by batch EM, not SGD")      

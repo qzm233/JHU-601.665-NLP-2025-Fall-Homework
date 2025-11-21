@@ -1,0 +1,9 @@
+usage: tag.py [-h] [-m MODEL] [-c CHECKPOINT] [-t TRAIN [TRAIN ...]]
+              [-o OUTPUT_FILE] [-e EVAL_FILE]
+              [--loss {cross_entropy,viterbi_error}] [--tolerance TOLERANCE]
+              [--max_steps MAX_STEPS] [-u] [--crf] [-l LEXICON] [-L] [-a]
+              [-v | -q] [--device {cpu,cuda,mps}] [-λ Λ] [-r RNN_DIM]
+              [--reg REG] [--lr LR] [--batch_size BATCH_SIZE]
+              [--eval_interval EVAL_INTERVAL]
+              input
+tag.py: error: file model/en-birnn-d8-w50-reg0.pkl doesn't exist

@@ -1,0 +1,32 @@
+INFO:corpus:Read 982 tokens from nextsup
+INFO:corpus:Created 7 tag types
+INFO:corpus:Created 7 word types
+INFO:crf_backprop:Parameters: 768 = 8*16 + 8*16 + 8*31 + 8 + 8*31 + 8
+INFO:crf_backprop:Parameters: 768 = 8*16 + 8*16 + 8*31 + 8 + 8*31 + 8
+<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x13bf06c40>> <integerize.Integerizer object at 0x13bf06490> 
+<integerize.Integerizer object at 0x13bf06490> <integerize.Integerizer object at 0x13bf066d0>
+  0%|          | 0/20 [00:00<?, ?it/s]100%|██████████| 20/20 [00:00<00:00, 191.30it/s]100%|██████████| 20/20 [00:00<00:00, 190.96it/s]
+INFO:eval:Cross-entropy: 1.4740 nats (= perplexity 4.367)
+  0%|          | 0/200 [00:00<?, ?it/s]  8%|▊         | 15/200 [00:00<00:01, 146.20it/s] 14%|█▍        | 29/200 [00:00<00:01, 125.27it/s]
+Traceback (most recent call last):
+  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/tag.py", line 409, in <module>
+    main()
+  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/tag.py", line 366, in main
+    model.train(corpus=train_corpus,
+  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf_backprop.py", line 139, in train
+    super().train(corpus, *args, minibatch_size=minibatch_size, lr=lr, reg=reg, **kwargs)
+  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf.py", line 196, in train
+    self.logprob_gradient_step(lr)
+  File "/Users/xiaomangguo/Desktop/JHU/2025Fall/NLP/HW/HW7/hw-rnn/code/crf_backprop.py", line 179, in logprob_gradient_step
+    self._minibatch_loss.backward()
+  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/_tensor.py", line 478, in backward
+    return handle_torch_function(
+  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/overrides.py", line 1534, in handle_torch_function
+    result = mode.__torch_function__(public_api, types, args, kwargs)
+  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/utils/_device.py", line 62, in __torch_function__
+    return func(*args, **kwargs)
+  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/Users/xiaomangguo/miniforge3/envs/nlp-class/lib/python3.9/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation: [torch.FloatTensor [7, 7]], which is output 0 of ExpBackward0, is at version 2; expected version 0 instead. Hint: enable anomaly detection to find the operation that failed to compute its gradient, with torch.autograd.set_detect_anomaly(True).
