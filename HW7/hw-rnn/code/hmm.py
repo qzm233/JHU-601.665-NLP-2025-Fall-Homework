@@ -300,10 +300,10 @@ class HiddenMarkovModel:
             
             # Evaluate with the new parameters
             dev_loss = loss(self)   # this will print its own log messages
-            # if dev_loss >= old_dev_loss * (1-tolerance):
-            #     # we haven't gotten much better, so perform early stopping
-            #     break
-            # old_dev_loss = dev_loss            # remember for next eval batch
+            if dev_loss >= old_dev_loss * (1-tolerance):
+                # we haven't gotten much better, so perform early stopping
+                break
+            old_dev_loss = dev_loss            # remember for next eval batch
         
         # Save the trained model.
         if save_path: self.save(save_path)
@@ -682,7 +682,7 @@ class HiddenMarkovModel:
             
         # torch.load is similar to pickle.load but handles tensors too
         # map_location allows loading tensors on different device than saved
-        model = torch.load(path, map_location=device)
+        model = torch.load(path, map_location=device, weights_only=False)
 
         if not isinstance(model, cls):
             raise ValueError(f"Type Error: expected object of type {cls.__name__} but got {model.__class__.__name__} " \

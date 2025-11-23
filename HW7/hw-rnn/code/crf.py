@@ -205,9 +205,9 @@ class ConditionalRandomField(HiddenMarkovModel):
                 logger.info(f"Average learning speed: {sum(learning_speeds)/len(learning_speeds):.2g} (estimated training loss reduction per example)")
             learning_speeds = []
             curr_loss = _eval_loss()
-            # if steps >= min_steps and curr_loss >= old_loss * (1-tolerance):
-                # break   # we haven't gotten much better since last evalbatch, so stop
-            # old_loss = curr_loss   # remember for next evalbatch
+            if steps >= min_steps and curr_loss >= old_loss * (1-tolerance):
+                break   # we haven't gotten much better since last evalbatch, so stop
+            old_loss = curr_loss   # remember for next evalbatch
 
         # Save the final trained model.
         if save_path: self.save(save_path)

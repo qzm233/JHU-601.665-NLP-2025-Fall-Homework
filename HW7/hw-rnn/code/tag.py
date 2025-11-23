@@ -12,8 +12,8 @@ import torch, torch.backends.mps
 from corpus import TaggedCorpus                
 from eval import model_cross_entropy, viterbi_error_rate, write_tagging, log as eval_log
 from hmm import HiddenMarkovModel
-from crf import ConditionalRandomField
-# from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
+# from crf import ConditionalRandomField
+from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
 # from crf_test import ConditionalRandomFieldTest as ConditionalRandomField
 # from crf_neural import ConditionalRandomFieldNeural as ConditionalRandomField
 
@@ -89,7 +89,7 @@ def parse_args() -> argparse.Namespace:
     traingroup.add_argument(
         "--max_steps",
         type=int,
-        default=6000,
+        default=50000,
         help="maximum number of training steps (measured in sentences, not epochs or minibatches)"
     )
 

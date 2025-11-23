@@ -1,1 +1,19 @@
 Cross-entropy: 3.0616 nats (= perplexity 21.363)
+Cross-entropy: 3.0616 nats (= perplexity 21.363)
+Cross-entropy: 2.1739 nats (= perplexity 8.793)
+Cross-entropy: 1.5710 nats (= perplexity 4.811)
+Cross-entropy: 0.7790 nats (= perplexity 2.179)
+Cross-entropy: 0.4432 nats (= perplexity 1.558)
+Cross-entropy: 0.3043 nats (= perplexity 1.356)
+Cross-entropy: 0.2419 nats (= perplexity 1.274)
+Cross-entropy: 0.2122 nats (= perplexity 1.236)
+Cross-entropy: 0.1999 nats (= perplexity 1.221)
+Cross-entropy: 0.1899 nats (= perplexity 1.209)
+Cross-entropy: 0.1867 nats (= perplexity 1.205)
+Cross-entropy: 0.1886 nats (= perplexity 1.208)
+Total training time: 1:31:17
+---
+Wrote tagging to model/en-birnn-d8-onehot_endev.output
+Cross-entropy: 0.1886 nats (= perplexity 1.208)
+Tagging accuracy: all: 94.158%, known: 96.937%, seen: nan%, novel: 65.370%
+===

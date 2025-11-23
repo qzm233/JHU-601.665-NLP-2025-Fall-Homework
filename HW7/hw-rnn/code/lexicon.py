@@ -152,9 +152,61 @@ def problex_lexicon(corpus: TaggedCorpus) -> torch.Tensor:
     There is one feature for each tag t in corpus.tagset,
     with value log(p(t|w)).  Finally, there is a feature with
     value log(p(w)).  These probabilities are add-one-smoothing
-    estimates."""
+    estimates.
+    """
 
-    raise NotImplementedError   # you fill this in!
+    vocab = corpus.vocab      # Integerizer[Word]
+    tagset = corpus.tagset    # Integerizer[Tag]
+
+    V = len(vocab)            # 词表大小
+    T = len(tagset)           # 标签种类数
+
+    # 统计 count(w) 和 count(w, t)
+    counts_w  = torch.zeros(V, dtype=torch.float32)      # [V]
+    counts_wt = torch.zeros(V, T, dtype=torch.float32)   # [V, T]
+
+    total_tokens = 0.0  # 只统计有 gold tag 的 token 数
+
+    for sentence in corpus:
+        for (word, tag) in sentence:
+            # 跳过没有 gold tag 的 token（半监督部分）
+            if tag is None:
+                continue
+
+            # 正确用法：对象 -> 索引，使用 .index(...)
+            w_idx = vocab.index(word)       # int or None
+            t_idx = tagset.index(tag)       # int or None
+            if w_idx is None or t_idx is None:
+                # 理论上不应该发生，保险起见 skip
+                continue
+
+            counts_w[w_idx]      += 1.0
+            counts_wt[w_idx, t_idx] += 1.0
+            total_tokens         += 1.0
+
+    if total_tokens == 0.0:
+        # 极端情况防御（基本不会发生）
+        log_probs_t_given_w = torch.full((V, T), float('-inf'), dtype=torch.float32)
+        log_probs_w         = torch.full((V,),    float('-inf'), dtype=torch.float32)
+    else:
+        # add-one smoothing for p(t | w)
+        # denom_t: [V, 1]，方便广播到 [V, T]
+        denom_t = counts_w.unsqueeze(1) + T              # count(w) + |T|
+        probs_t_given_w = (counts_wt + 1.0) / denom_t    # [V, T]
+        log_probs_t_given_w = torch.log(probs_t_given_w)
+
+        # add-one smoothing for p(w)
+        denom_w = total_tokens + V                       # N + |V|
+        probs_w = (counts_w + 1.0) / denom_w             # [V]
+        log_probs_w = torch.log(probs_w)
+
+    # 拼成最终的特征矩阵：[V, T + 1]
+    features = torch.empty((V, T + 1), dtype=torch.float32)
+    features[:, :T] = log_probs_t_given_w   # 前 T 维是 log p(t|w)
+    features[:,  T] = log_probs_w           # 最后一维是 log p(w)
+
+    return features
+
 
 def affixes_lexicon(corpus: TaggedCorpus,
                     newvocab: Optional[Integerizer[Word]] = None) -> torch.Tensor:

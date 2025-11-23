@@ -1,0 +1,39 @@
+INFO:corpus:Read 95936 tokens from ensup
+INFO:corpus:Created 26 tag types
+INFO:corpus:Created 12466 word types
+INFO:crf_backprop:Parameters: 1704 = 8*36 + 8*36 + 8*69 + 8 + 8*70 + 8
+INFO:crf_backprop:Parameters: 1704 = 8*36 + 8*36 + 8*69 + 8 + 8*70 + 8
+INFO:eval:Cross-entropy: 3.0563 nats (= perplexity 21.248)
+INFO:crf:Average learning speed: 8.8 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 2.0670 nats (= perplexity 7.901)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-2010.pkl
+INFO:crf:Average learning speed: 19 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 1.3650 nats (= perplexity 3.916)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-4320.pkl
+INFO:crf:Average learning speed: 59 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.7022 nats (= perplexity 2.018)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-6540.pkl
+INFO:crf:Average learning speed: 48 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4602 nats (= perplexity 1.584)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-8790.pkl
+INFO:crf:Average learning speed: 37 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3410 nats (= perplexity 1.406)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-10710.pkl
+INFO:crf:Average learning speed: 27 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.2826 nats (= perplexity 1.327)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-12030.pkl
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-13680.pkl
+INFO:crf:Average learning speed: 27 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.2501 nats (= perplexity 1.284)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only-15030.pkl
+INFO:crf:Average learning speed: 20 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.2504 nats (= perplexity 1.284)
+INFO:hmm:Saved model to model/en-birnn-d8-problex-only.pkl
+INFO:eval:Total training time: 1:36:06
+---
+INFO:eval:Wrote tagging to model/en-birnn-d8-problex-only_endev.output
+INFO:eval:Cross-entropy: 0.2504 nats (= perplexity 1.284)
+INFO:eval:Tagging accuracy: all: 92.501%, known: 96.323%, seen: nan%, novel: 52.894%
+INFO:eval:===
+<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x133447460>> <integerize.Integerizer object at 0x133447400> 
+<integerize.Integerizer object at 0x133447400> <integerize.Integerizer object at 0x133447070>

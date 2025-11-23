@@ -1,0 +1,85 @@
+Warning: model/en-emb-only-onehot.pkl already exists; will be overwritten at end of training
+Warning: won't load model/en-emb-only-onehot.pkl: use --checkpoint for that
+INFO:corpus:Read 95936 tokens from ensup
+INFO:corpus:Created 26 tag types
+INFO:corpus:Created 12466 word types
+INFO:crf_backprop:Parameters: 324740 = 26*12464 + 26*26
+INFO:eval:Cross-entropy: 3.0514 nats (= perplexity 21.144)
+INFO:crf:Average learning speed: 1.2 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.9643 nats (= perplexity 2.623)
+INFO:crf:Average learning speed: 0.36 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.7856 nats (= perplexity 2.194)
+INFO:hmm:Saved model to model/en-emb-only-onehot-4020.pkl
+INFO:crf:Average learning speed: 0.29 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.6975 nats (= perplexity 2.009)
+INFO:crf:Average learning speed: 0.25 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.6399 nats (= perplexity 1.896)
+INFO:hmm:Saved model to model/en-emb-only-onehot-8310.pkl
+INFO:crf:Average learning speed: 0.23 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.5984 nats (= perplexity 1.819)
+INFO:crf:Average learning speed: 0.22 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.5661 nats (= perplexity 1.761)
+INFO:hmm:Saved model to model/en-emb-only-onehot-12420.pkl
+INFO:crf:Average learning speed: 0.2 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.5408 nats (= perplexity 1.717)
+INFO:crf:Average learning speed: 0.2 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.5180 nats (= perplexity 1.679)
+INFO:hmm:Saved model to model/en-emb-only-onehot-16800.pkl
+INFO:crf:Average learning speed: 0.19 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4978 nats (= perplexity 1.645)
+INFO:crf:Average learning speed: 0.18 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4828 nats (= perplexity 1.621)
+INFO:hmm:Saved model to model/en-emb-only-onehot-20100.pkl
+INFO:crf:Average learning speed: 0.18 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4688 nats (= perplexity 1.598)
+INFO:hmm:Saved model to model/en-emb-only-onehot-22860.pkl
+INFO:hmm:Saved model to model/en-emb-only-onehot-23610.pkl
+INFO:crf:Average learning speed: 0.17 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4558 nats (= perplexity 1.577)
+INFO:crf:Average learning speed: 0.16 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4446 nats (= perplexity 1.560)
+INFO:hmm:Saved model to model/en-emb-only-onehot-26070.pkl
+INFO:hmm:Saved model to model/en-emb-only-onehot-26760.pkl
+INFO:crf:Average learning speed: 0.15 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4339 nats (= perplexity 1.543)
+INFO:hmm:Saved model to model/en-emb-only-onehot-28770.pkl
+INFO:crf:Average learning speed: 0.16 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4249 nats (= perplexity 1.529)
+INFO:hmm:Saved model to model/en-emb-only-onehot-30870.pkl
+INFO:crf:Average learning speed: 0.15 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4171 nats (= perplexity 1.518)
+INFO:hmm:Saved model to model/en-emb-only-onehot-33480.pkl
+INFO:crf:Average learning speed: 0.15 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4090 nats (= perplexity 1.505)
+INFO:hmm:Saved model to model/en-emb-only-onehot-34860.pkl
+INFO:crf:Average learning speed: 0.14 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.4019 nats (= perplexity 1.495)
+INFO:hmm:Saved model to model/en-emb-only-onehot-37290.pkl
+INFO:crf:Average learning speed: 0.15 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3951 nats (= perplexity 1.485)
+INFO:hmm:Saved model to model/en-emb-only-onehot-39150.pkl
+INFO:crf:Average learning speed: 0.14 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3891 nats (= perplexity 1.476)
+INFO:hmm:Saved model to model/en-emb-only-onehot-41430.pkl
+INFO:crf:Average learning speed: 0.14 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3824 nats (= perplexity 1.466)
+INFO:hmm:Saved model to model/en-emb-only-onehot-43410.pkl
+INFO:crf:Average learning speed: 0.13 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3769 nats (= perplexity 1.458)
+INFO:crf:Average learning speed: 0.12 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3721 nats (= perplexity 1.451)
+INFO:hmm:Saved model to model/en-emb-only-onehot-46110.pkl
+INFO:crf:Average learning speed: 0.13 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3670 nats (= perplexity 1.443)
+INFO:hmm:Saved model to model/en-emb-only-onehot-49260.pkl
+INFO:crf:Average learning speed: 0.13 (estimated training loss reduction per example)
+INFO:eval:Cross-entropy: 0.3622 nats (= perplexity 1.437)
+INFO:hmm:Saved model to model/en-emb-only-onehot.pkl
+INFO:eval:Total training time: 2:46:19
+---
+INFO:eval:Wrote tagging to model/en-emb-only-onehot_endev.output
+INFO:eval:Cross-entropy: 0.3622 nats (= perplexity 1.437)
+INFO:eval:Tagging accuracy: all: 87.423%, known: 89.602%, seen: nan%, novel: 64.848%
+INFO:eval:===
+<bound method TaggedCorpus.num_tokens of <corpus.TaggedCorpus object at 0x1262e4280>> <integerize.Integerizer object at 0x1262e4940> 
+<integerize.Integerizer object at 0x1262e4940> <integerize.Integerizer object at 0x1262e4910>
