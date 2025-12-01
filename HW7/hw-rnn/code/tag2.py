@@ -13,9 +13,13 @@ from corpus import TaggedCorpus
 from eval import model_cross_entropy, viterbi_error_rate, write_tagging, log as eval_log
 from hmm import HiddenMarkovModel
 # from crf import ConditionalRandomField
-from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
 # from crf_test import ConditionalRandomFieldTest as ConditionalRandomField
 # from crf_neural import ConditionalRandomFieldNeural as ConditionalRandomField
+
+from crf_backprop import ConditionalRandomFieldBackprop as ConditionalRandomField
+from crf_awesome_plus import ConditionalRandomFieldNeuralPlus as ConditionalRandomFieldNeural # this is fine-tuned embeddings + simpler FF architecture improvement
+
+
 
 log = logging.getLogger(Path(__file__).stem)  # For usage, see findsim.py in earlier assignment.
 
@@ -260,10 +264,16 @@ def parse_args() -> argparse.Namespace:
             args.new_model_class = HiddenMarkovModel
     else:                   # create some sort of CRF
         if args.rnn_dim or args.lexicon or args.problex:
-            from crf_neural import ConditionalRandomFieldNeural  # module provided with hw-rnn homework
-            args.new_model_class = ConditionalRandomFieldNeural
-        else: 
-            args.new_model_class = ConditionalRandomField          
+            args.new_model_class = ConditionalRandomFieldNeural 
+        else:
+            args.new_model_class = ConditionalRandomField
+
+    # else:                   # create some sort of CRF
+    #     if args.rnn_dim or args.lexicon or args.problex:
+    #         from crf_neural import ConditionalRandomFieldNeural  # module provided with hw-rnn homework
+    #         args.new_model_class = ConditionalRandomFieldNeural
+    #     else: 
+    #         args.new_model_class = ConditionalRandomField          
 
     return args
 
@@ -303,9 +313,8 @@ def main() -> None:
     # Load or create the model, and load the training corpus.
     train_paths = [Path(t) for t in args.train] if args.train else []
     new_model_class = args.new_model_class
-    known_vocab = TaggedCorpus(Path("../data/ensup")).vocab  # we may need this
+    known_vocab = None   # we may need this
     if args.load_path:
-        known_vocab = TaggedCorpus(Path("../data/ensup")).vocab  # we may need this
         # load an existing model and use its vocab/tagset/lexicon
         model = HiddenMarkovModel.load(args.load_path, device=args.device)  # HMM is ancestor of all classes
         for option in 'crf', 'unigram', 'rnn_dim', 'lexicon', 'problex', 'awesome': 
@@ -343,9 +352,18 @@ def main() -> None:
                     lexicon = build_lexicon(train_corpus, one_hot=True)
 
             # Now create the model.
-            model = new_model_class(train_corpus.tagset, train_corpus.vocab, 
-                                    rnn_dim=(args.rnn_dim or 0), lexicon=lexicon,   # neural model args
-                                    unigram=args.unigram)
+            model = new_model_class(
+                train_corpus.tagset,
+                train_corpus.vocab,
+                rnn_dim=(args.rnn_dim or 0),
+                lexicon=lexicon,          
+                unigram=args.unigram,
+                tune_lexicon=args.awesome 
+            )
+            # model = new_model_class(train_corpus.tagset, train_corpus.vocab, 
+            #                         rnn_dim=(args.rnn_dim or 0), lexicon=lexicon,   # neural model args
+            #                         unigram=args.unigram)
+    
     # Load the input data (eval corpus), using the same vocab and tagset.
     eval_corpus = TaggedCorpus(Path(args.input), tagset=model.tagset, vocab=model.vocab)
     

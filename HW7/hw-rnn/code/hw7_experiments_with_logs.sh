@@ -160,3 +160,16 @@ python tag.py ../data/endev --train ../data/ensup --crf   --reg 0.1 --lr 0.01 --
 # #   --rnn_dim 8 --lexicon ../lexicons/words-50.txt \
 # #   --model model/en-birnn-d8-w50-quiet.pkl \
 # #   > logs/q4_en_birnn_d8_w50_quiet.log 2>&1
+
+
+# 3.1: One-hot embeddings only (no CBOW lexicon, no problex)
+python -u tag.py ../data/endev --model model/en-birnn-d8-onehot.pkl
+
+# 3.2: CBOW embeddings only (lexicon, no problex)
+python -u tag.py ../data/endev --model model/en-birnn-d8-cbow-w50.pkl
+
+# 3.3: Frequency-based features only (problex, no CBOW lexicon)
+python -u tag.py ../data/endev --model model/en-birnn-d8-problex-only.pkl
+
+# 3.4: CBOW + frequency features together (lexicon + problex)
+python -u tag.py ../data/endev --model model/en-birnn-d8-cbow+problex-w50.pkl

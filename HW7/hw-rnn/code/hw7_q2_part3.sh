@@ -23,6 +23,19 @@ python -u tag.py ../data/endev --train ../data/ensup --crf \
   --model model/en-birnn-d8-w50-lr0.05.pkl --device cuda \
   > logs/q2_en_birnn_d8_w50_lr0.05.log 2>&1
 
+# higher lr = 0.1
+python -u tag.py ../data/endev --train ../data/ensup --crf \
+  --reg 0.1 --lr 0.1 --batch_size 30 \
+  --rnn_dim 8 --lexicon ../lexicons/words-50.txt \
+  --model model/en-birnn-d8-w50-lr0.05.pkl --device cuda \
+  > logs/q2_en_birnn_d8_w50_lr0.1.log 2>&1 
+
+TQDM_DISABLE=1 nohup python -u tag.py ../data/endev --train ../data/ensup --crf \
+  --reg 0.1 --lr 0.1 --batch_size 30 \
+  --rnn_dim 8 --lexicon ../lexicons/words-50.txt \
+  --model model/en-birnn-d8-w50-lr0.05.pkl \
+  > logs/q2_en_birnn_d8_w50_lr0.1.log 2>&1 &
+
 # larger minibatch = 60
 python -u tag.py ../data/endev --train ../data/ensup --crf \
   --reg 0.1 --lr 0.01 --batch_size 60 \
@@ -41,8 +54,8 @@ python -u tag.py ../data/endev --train ../data/ensup --crf \
 # （等前面模型训练完再单独跑也行）
 
 # Baseline CRF on training set
-# python -u tag.py ../data/ensup --model model/en-crf-basic.pkl --device cuda \
-#   > logs/q2_en_crf_basic_on_train.log 2>&1
+python -u tag.py ../data/ensup --model model/en-crf-basic.pkl --device cuda \
+  > logs/q2_en_crf_basic_on_train.log 2>&1
 
 # Best biRNN-CRF models on training set
 # python -u tag.py ../data/ensup --model model/en-birnn-d8-w50.pkl --device cuda \
